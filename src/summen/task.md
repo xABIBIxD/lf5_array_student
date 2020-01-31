@@ -1,0 +1,1 @@
+# Summenbildung im Array
