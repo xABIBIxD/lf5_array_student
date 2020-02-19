@@ -1,7 +1,6 @@
 package randomNumbers;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.mockito.Mockito;
 
 import java.util.Random;
 
