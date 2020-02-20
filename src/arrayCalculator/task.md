@@ -1,1 +1,2 @@
-# Summenbildung im Array
+# Array Calculator
+Implementieren Sie die Klasse `ArrayCalculator`! Starten Sie zunächst alle Tests und betrachen Se das Testresult (ein paar wenige Tests sind sogar grün!). Nehmen Sie sich nun einen Test nach dem anderen vor und sorgen Sie dafür, dass er grün wird. Was hierfür konkret zu tun ist, entnehmen Sie dem TestResult, also der Benennung der Tests sowie der verwendeten Testdaten.
