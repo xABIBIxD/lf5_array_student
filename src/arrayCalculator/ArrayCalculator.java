@@ -1,5 +1,6 @@
 package arrayCalculator;
 
+
 public class ArrayCalculator {
     public int[] duplicateArrayValues(int[] array) {
 
@@ -7,7 +8,6 @@ public class ArrayCalculator {
     }
 
     public int[] sumArrays(int[] array1, int[] array2) throws IllegalArgumentException {
-
         return null;
     }
 

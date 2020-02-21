@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.*;
 
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -129,7 +131,6 @@ public class ArrayCalculatorTest {
     public void givenEmptyArrayOrArrayWithOnElement_whenGetBiggestTwo_throwsException(int[] array) {
         assertThrows(IllegalArgumentException.class, () -> this.calc.getLargestTwo(array));
     }
-
 
     static Stream<Arguments> givenEmptyArrayOrArrayWithOnElement_whenGetBiggestTwo_throwsException() {
         return Stream.of(
