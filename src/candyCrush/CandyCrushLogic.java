@@ -15,7 +15,6 @@ public class CandyCrushLogic {
     private HashMap<Character, Character> symToDelSym = new HashMap<>();
     private HashMap<Character, Character> delSymTosym = new HashMap<>();
 
-
     /**
      * Constructor
      * is called to create an object of type CandyCrushLogic
@@ -34,23 +33,23 @@ public class CandyCrushLogic {
             delSymTosym.put(delSyms[i], SYMBOLS[i]);
             symToDelSym.put(delSyms[i], delSyms[i]);
         }
+        symToDelSym.put(' ', ' ');
+        delSymTosym.put(' ', ' ');
     }
 
     public char[][] getField() {
         return this.field;
     }
 
-    /**
-     * only required for tests
-     *
-     * @param field
-     */
     public void setField(char[][] field) {
         this.field = field;
     }
 
     public void swap(int y1, int x1, int y2, int x2) {
-        if (Math.abs(y1 - y2) > 1 || Math.abs(x1 - x2) > 1 || (y1 - y2 == 0 && x1 - x2 == 0)) {
+//        if (Math.abs(y1 - y2) > 1 || Math.abs(x1 - x2) > 1 || (y1 - y2 == 0 && x1 - x2 == 0)) {
+//            throw new IllegalArgumentException();
+//        }
+        if (Math.abs(Math.abs(x1 + y1) - Math.abs(x2 + y2)) != 1) {
             throw new IllegalArgumentException();
         }
         if (!isInsideField(y1) || !isInsideField(x1) || !isInsideField(y2) || !isInsideField(x2)) {
@@ -69,6 +68,7 @@ public class CandyCrushLogic {
     }
 
     public void print() {
+        System.out.println("******* Field ************");
         for (char[] row : this.field) {
             for (char c : row) {
                 System.out.print(c);
@@ -77,7 +77,9 @@ public class CandyCrushLogic {
         }
     }
 
-    public void removeMatchingSymbols() {
+
+    public boolean removeMatchingSymbols() {
+        boolean match = false;
         char[][] zField = new char[FIELD_SIZE + 2][FIELD_SIZE + 2];
         for (int y = 0; y < FIELD_SIZE; y++) {
             for (int x = 0; x < FIELD_SIZE; x++) {
@@ -88,9 +90,7 @@ public class CandyCrushLogic {
         for (int y = 1; y < FIELD_SIZE + 1; y++) {
             for (int x = 1; x < FIELD_SIZE + 1; x++) {
                 char current = zField[y][x];
-                if (current == ' ') {
-                    System.out.println("current Leerzeichen: y:" + y + " / x:" + x);
-                }
+
                 int sameTop = 0;
                 for (int yc = y - 1; yc > 0; yc--) {
                     if (symbolEq(zField[yc][x], current)) {
@@ -125,6 +125,9 @@ public class CandyCrushLogic {
                 }
 
                 if ((sameLeft + sameRight + 1) >= 3) {
+//                    System.out.println(String.format("Y: %d, X:%d, SameLeft:%d, SameRight:%d, SameTop:%d, SameBot:%d", y, x, sameLeft, sameRight, sameTop, sameBottom));
+
+                    match = true;
                     zField[y][x] = this.symToDelSym.get(current);
                     while (sameLeft > 0) {
                         zField[y][x - sameLeft] = this.symToDelSym.get(current);
@@ -137,8 +140,8 @@ public class CandyCrushLogic {
                 }
                 if ((sameBottom + sameTop + 1) >= 3) {
 //                    System.out.println(String.format("Y: %d, X:%d, SameLeft:%d, SameRight:%d, SameTop:%d, SameBot:%d", y, x, sameLeft, sameRight, sameTop, sameBottom));
-
-                    zField[y][x] = ' ';
+                    match = true;
+                    zField[y][x] = this.symToDelSym.get(current);
                     while (sameTop > 0) {
                         zField[y - sameTop][x] = this.symToDelSym.get(current);
                         sameTop--;
@@ -150,7 +153,9 @@ public class CandyCrushLogic {
                 }
             }
         }
-
+        if (!match) {
+            return false;
+        }
 //        System.out.println("____ vorher ____");
 //        print();
         for (int y = 0; y < FIELD_SIZE; y++) {
@@ -164,6 +169,7 @@ public class CandyCrushLogic {
                 this.field[y][x] = fill;
             }
         }
+        return true;
 //        System.out.println("____ nachher ____");
 //        print();
     }
@@ -183,4 +189,16 @@ public class CandyCrushLogic {
         return false;
     }
 
+    public void fillField() {
+        for (int y = 0; y < FIELD_SIZE; y++) {
+            for (int x = 0; x < FIELD_SIZE; x++) {
+                if (this.field[y][x] == ' ') {
+                    for (int yt = y - 1; yt >= 0; yt--) {
+                        this.field[yt + 1][x] = this.field[yt][x];
+                    }
+                    this.field[0][x] = SYMBOLS[(int) (Math.random() * SYMBOLS.length)];
+                }
+            }
+        }
+    }
 }

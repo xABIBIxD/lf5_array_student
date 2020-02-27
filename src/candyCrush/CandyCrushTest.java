@@ -8,6 +8,9 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -108,7 +111,10 @@ public class CandyCrushTest {
                 Arguments.of(9, 9, 9, 10),
                 Arguments.of(4, 4, 2, 2),
                 Arguments.of(4, 4, 1, 1),
-                Arguments.of(4, 4, 4, 6)
+                Arguments.of(4, 4, 4, 6),
+                Arguments.of(9, 9, 8, 8),
+                Arguments.of(8, 8, 9, 9)
+
         );
     }
 
@@ -197,7 +203,6 @@ public class CandyCrushTest {
                 " -<< ++<< ",
                 " *++ ~~-? ",
                 " *~?<~~<< ")), this.candy.getField());
-
     }
 
     @Test
@@ -258,5 +263,100 @@ public class CandyCrushTest {
         ), this.candy.getField());
     }
 
+    @Test
+    public void givenFieldWithNoMatch_whenRemoveMatchingSymbols_returnFalse() {
+        this.candy.setField(convertTo2dArrayy(String.join("\n",
+                "-??--**+?-",
+                "**-~?-~~++",
+                "-**<**<?--",
+                "++<*+-*+-+",
+                "?*?+-*--~-",
+                "+-+~*+?-<?",
+                "*+-++--~--",
+                "--<<*++<<+",
+                "**++*~~-??",
+                "**~?<~~<<+")));
+        assertFalse(this.candy.removeMatchingSymbols());
+    }
 
+    @Test
+    public void givenFieldWithMatch_whenRemoveMatchingSymbols_returnTrue() {
+        this.candy.setField(convertTo2dArrayy(String.join("\n",
+                "-??--**+?-",
+                "**-~?-~~++",
+                "-**<**<?--",
+                "++<*+-*+-?",
+                "?*?+-*--~-",
+                "+++~*+?-<?",
+                "*--++--~--",
+                "--<<*++<<+",
+                "**++*~~-??",
+                "**~?<~~<<+")));
+        assertTrue(this.candy.removeMatchingSymbols());
+
+        this.candy.setField(convertTo2dArrayy(String.join("\n",
+                "-??--**+?-",
+                "**-~?-~~++",
+                "-**<**<?--",
+                "++<*+-*+-+",
+                "?*?+-*--~-",
+                "+-+~*+?-<?",
+                "*+-++--~--",
+                "*-<<*++<<+",
+                "**++*~~-??",
+                "**~?<~~<<+")));
+        assertTrue(this.candy.removeMatchingSymbols());
+    }
+
+
+    @Test
+    public void givenFieldWithBlanks_whenFillField_fieldIsFilledUp() {
+        char[][] origField = convertTo2dArrayy(String.join("\n",
+                "-??--**+?-",
+                "**-~?-?   ",
+                "-**<**<?--",
+                "++<*+-*+-+",
+                " *?+-*--~-",
+                " -+~*+?-<?",
+                " +-++--~--",
+                "--<<*++<<+",
+                "*   *~~-??",
+                "**~?<~~<<+"));
+
+        this.candy.setField(convertTo2dArrayy(String.join("\n",
+                "-??--**+?-",
+                "**-~?-?   ",
+                "-**<**<?--",
+                "++<*+-*+-+",
+                " *?+-*--~-",
+                " -+~*+?-<?",
+                " +-++--~--",
+                "--<<*++<<+",
+                "*   *~~-??",
+                "**~?<~~<<+")));
+        this.candy.fillField();
+        assertEquals('+', this.candy.getField()[1][7], "y: 1   x:7");
+        assertEquals('?', this.candy.getField()[1][8], "y: 1   x:8");
+        assertEquals('-', this.candy.getField()[1][9], "y: 1   x:9");
+
+        for (int y = 8; y > 1; y--) {
+            for (int x = 1; x < 4; x++) {
+                assertEquals(origField[y - 1][x], this.candy.getField()[y][x], String.format("not correct @ Y:%d/X:%d", y, x));
+            }
+        }
+
+        for (int y = 6; y > 2; y--) {
+            assertEquals(origField[y - 3][0], this.candy.getField()[y][0], String.format("not correct @ Y:%d/X:%d", y, 0));
+        }
+        List<Character> symbols = new ArrayList<>();
+        for (char c : CandyCrushLogic.SYMBOLS) {
+            symbols.add(c);
+        }
+        for (char row[] : this.candy.getField()) {
+            for (char c : row) {
+                assertTrue(symbols.contains(c));
+            }
+        }
+
+    }
 }
