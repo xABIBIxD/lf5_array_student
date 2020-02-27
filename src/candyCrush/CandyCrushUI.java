@@ -6,12 +6,10 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.sql.Date;
 import java.util.HashMap;
 
 public class CandyCrushUI extends JFrame {
@@ -44,7 +42,7 @@ class Canvas extends JPanel {
         try {
             this.explosion = AudioSystem.getClip();
             this.explosion.open(AudioSystem.getAudioInputStream(
-                    getClass().getResourceAsStream("/Explosion.wav")));
+                    getClass().getResourceAsStream("/candyCrush/Explosion.wav")));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -54,13 +52,15 @@ class Canvas extends JPanel {
         this.panel = new JPanel();
         this.logic = new CandyCrushLogic();
         this.images = new HashMap<>();
-        this.images.put(CandyCrushLogic.SYMBOLS[0], ImageIO.read(getClass().getResource("/images/Blue.png")));
-        this.images.put(CandyCrushLogic.SYMBOLS[1], ImageIO.read(getClass().getResource("/images/Green.png")));
-        this.images.put(CandyCrushLogic.SYMBOLS[2], ImageIO.read(getClass().getResource("/images/Orange.png")));
-        this.images.put(CandyCrushLogic.SYMBOLS[3], ImageIO.read(getClass().getResource("/images/Purple.png")));
-        this.images.put(CandyCrushLogic.SYMBOLS[4], ImageIO.read(getClass().getResource("/images/Red.png")));
-        this.images.put(CandyCrushLogic.SYMBOLS[5], ImageIO.read(getClass().getResource("/images/Yellow.png")));
-        this.images.put(' ', new ImageIcon(getClass().getResource("/images/blast.gif")).getImage());
+        this.images.put(CandyCrushLogic.SYMBOLS[0], ImageIO.read(getClass().getResource("/candyCrush/Blue.png")));
+        this.images.put(CandyCrushLogic.SYMBOLS[1], ImageIO.read(getClass().getResource("/candyCrush/Green.png")));
+        this.images.put(CandyCrushLogic.SYMBOLS[2], ImageIO.read(getClass().getResource("/candyCrush/Orange.png")));
+        this.images.put(CandyCrushLogic.SYMBOLS[3], ImageIO.read(getClass().getResource("/candyCrush/Purple.png")));
+        this.images.put(CandyCrushLogic.SYMBOLS[4], ImageIO.read(getClass().getResource("/candyCrush/Red.png")));
+        this.images.put(CandyCrushLogic.SYMBOLS[5], ImageIO.read(getClass().getResource("/candyCrush/Yellow.png")));
+        this.images.put(' ', CandyCrushLogic.ANIMATET_EXPLOSION_ ?
+                new ImageIcon(getClass().getResource("/candyCrush/blast.gif")).getImage()
+                : ImageIO.read(getClass().getResource("/candyCrush/Explosion.png")));
 
         this.repaint();
         this.addMouseListener(new MouseListener() {
@@ -86,9 +86,8 @@ class Canvas extends JPanel {
             }
         });
 
-        new Timer(20, (e) -> {
-            this.repaint();
-        }).start();
+        new Timer(20, (e) -> this.repaint()).start();
+
 
         while (this.logic.removeMatchingSymbols()) {
             this.logic.fillField();
@@ -130,25 +129,41 @@ class Canvas extends JPanel {
             t.setRepeats(false);
             t.start();
         }
-
     }
 
     private BufferedImage renderGame() {
         BufferedImage img = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
         Graphics g = img.getGraphics();
         Graphics2D g2 = (Graphics2D) g;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        char[][] field = this.logic.getField();
-        for (int y = 0; y < field.length; y++) {
-            for (int x = 0; x < field.length; x++) {
-                g2.drawImage(this.images.get(field[y][x]), x * tileSize, y * tileSize, tileSize, tileSize, null);
+        if (this.logic.getField() != null) {
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            char[][] field = this.logic.getField();
+            for (int y = 0; y < field.length; y++) {
+                for (int x = 0; x < field.length; x++) {
+                    if ((int) field[y][x] == 0) {
+                        try {
+                            g2.drawImage(ImageIO.read(getClass().getResource("/candyCrush/empty.png")), x * tileSize, y * tileSize, tileSize, tileSize, null);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    g2.drawImage(this.images.get(field[y][x]), x * tileSize, y * tileSize, tileSize, tileSize, null);
+                }
             }
+            if (this.x1 != -1 && this.y1 != -1) {
+                g2.setColor(Color.cyan);
+                g2.drawRect(this.x1 * tileSize, this.y1 * tileSize, tileSize, tileSize);
+            }
+            return img;
+        } else {
+            try {
+                g2.drawImage(ImageIO.read(getClass().getResource("/candyCrush/preview.png")), 50, 50, null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return img;
         }
-        if (this.x1 != -1 && this.y1 != -1) {
-            g2.setColor(Color.cyan);
-            g2.drawRect(this.x1 * tileSize, this.y1 * tileSize, tileSize, tileSize);
-        }
-        return img;
     }
 
     @Override
@@ -156,6 +171,5 @@ class Canvas extends JPanel {
         g.setColor(Color.white);
         g.fillRect(0, 0, size, size);
         g.drawImage(renderGame(), 0, 0, size, size, null);
-
     }
 }

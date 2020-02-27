@@ -46,10 +46,11 @@ Validere mit:
 - `givenFieldWithMatch_whenRemoveMatchingSymbols_returnTrue`
 - `givenFieldWithNoMatch_whenRemoveMatchingSymbols_returnFalse`
 
-#### 5) 
+#### 4) 
 Jetzt sollen die Steine fallen! Die Lücken werden bei CandyCrush aufgefüllt, indem die über der Lücke liegenden vorhandenen Steine "herunter fallen". Die dann entstandene Lücke über den heruntergefallenen Steinen wird mit neuen zufälligen Steinen aufgefüllt. Implementiere die Methode `fillField`. Validiere mit 
 - `givenFieldWithBlanks_whenFillField_fieldIsFilledUp`
 
+Tipp: Die Klassenvariable `ANIMATED_EXPLOSION` kann nun auf `true` gesetzt werden, dann würde im UI eine "animierte" Explosion anstatt eines statischen Bildes gezeigt werden.
 #### Ergänzungen
 Sie sind schon fertig und wollen noch Herausfordeungen? Dann mal los:
 
