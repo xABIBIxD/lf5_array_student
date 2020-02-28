@@ -27,7 +27,6 @@ Nun kommt der wohl schwierigste Teil. Bei Candy-Crush verschwinden nach einem Sp
 - `givenFieldWitHorizontalMatches_whenRemoveMatchingSymbols_returnFieldWithBlanksOnMatchingSymbols`
 - `givenFieldWithVerticalMatches_whenRemoveMatchingSymbols_returnFieldWithBlanksOnMatchingSymbols`
 
-
 Nun können die Combos aber auch gemischt auftreten. D.h. zum Beispiel wäre folgendendes Muster denkbar:
 ```   
    *
@@ -52,7 +51,7 @@ Jetzt sollen die Steine fallen! Die Lücken werden bei CandyCrush aufgefüllt, i
 
 Tipp: Die Klassenvariable `ANIMATED_EXPLOSION` kann nun auf `true` gesetzt werden, dann würde im UI eine "animierte" Explosion anstatt eines statischen Bildes gezeigt werden.
 #### Ergänzungen
-Sie sind schon fertig und wollen noch Herausfordeungen? Dann mal los:
+Sie sind schon fertig und wollen noch Herausforderungen? Dann mal los:
 
 * Ein Swap ist nur erlaubt, sofern einer der zu tauschenden Steine nach dem Tausch ein Match auslöst. 
 * Eine Methode `isGameOver()` prüft, ob mittels eines `swap` noch ein Match ausgelöst werden kann. Falls dies nicht mehr möglich sein sollte, liefert die Methode `true`zurück, sonst `false`. Versuchen Sie diesen Check in der Klasse `Canvas` einzubauen und im Game-Over-Fall eine Nachricht auszugeben (z.B. mit `JOptionPane.showMessageDialog(null, "Game Over!"). Im Anschluss könnte auch ein neues Feld generiert werden....
