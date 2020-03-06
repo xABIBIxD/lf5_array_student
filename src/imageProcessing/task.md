@@ -40,14 +40,57 @@ Implementiere die Methode `convertImageToGraycaleArray(Buffered Image)`. Validie
  
 ## 4) Threshold 
 Implementiere die Methode `threshold(int[][] pixels, int thresholdValue)`. Jeder Pixel der einen Grauwert unterhalb des `thresholdValue` hat wird auf 0 gesetzt.  
+
+Validiere mit:
+- `givenInvalidParams_whenThreshold_ThrowsException`
+- `givenArray_whenThreshold_returnThresholdedArray`
+
+## 5) Gaussian Blur 
+Der Filter wird benutzt, um z.B. Kanten zu glätten, wobei auch die Werte 
+der umliegenden Punkte mit berücksichtigt werden. Doch was
+ ist genau ein Filter? Im Grund genommen ist ein Filter auch wieder 
+ eine Matrix. Und dieser Filter wird auf das Bild angewendet. Hier ein Beispiel:
  
-## 5) Soebel
+ Gegeben ist folgendes Bild:
+ 
+ ![](../../images/gaussian_blur/gaussian0.png)
+ 
+ 
+ Wir möchten folgenden Gaußschen Filter anwenden:
+
+![gaussian1](../../images/gaussian_blur/gaussian1.png)
+ 
+Jetzt wird jeder Punkt in der ersten Matrix neu berechnet. Nehmen wir die Position (3, 3) was dem Wert 4 entspricht. Die umliegenden Punkte sind: 7, 8, 9, 3, 5, 8, 9, 1. Wir rechnen:
+
+![gaussian2](../../images/gaussian_blur/gaussian2.png)
+
+Und die 91 müssen wir noch durch 16 teilen. Damit haben wir den neuen Wert für die Position (3,3). 
+ 
+Diese Berechnung wird dann für jeden Pixel durchgeführt und es entsteht ein neues Bild (das dem alten Bild natürlich ähnlich aussieht). Die Randpixel werden unverändert übernommen! 
+
+Validiere mit:
+- `givenNull_whenGaussianBlur_throwsException`
+- `givenPixelArray_whenGaussianBlur_returnBlurredArray`
+
+## 6) Soebel
 Jetzt kommt eine Kantendetektion mittels des Soebel-Algorithmus. Der Algorithmus nutzt eine Faltung mittels einer 3×3-Matrix (Faltungsmatrix), die aus dem Originalbild ein Gradienten-Bild erzeugt. Mit diesem werden hohe Frequenzen im Bild mit Grauwerten dargestellt. Die Bereiche der größten Intensität sind dort, wo sich die Helligkeit des Originalbildes am stärksten ändert und somit die größten Kanten darstellt. Daher wird zumeist nach der Faltung mit dem Sobeloperator eine Schwellwert-Funktion angewandt. Der Algorithmus kann allerdings auch auf andere zweidimensionale Signale angewandt werden.
 
 Aus dem Originalbild wird für jeden Bildpunkt immer nur ein Ausschnitt, genauer gesagt die Umgebung des zu betrachtenden Punktes, verwendet. Nun werden mittels der Sobeloperatoren `sx` und `sy` die "gefalteten" Resultate `gx` und `gy` berechnet.
 
 
-
+```
+int[][] sx = new int[][]{
+                {-1, 0, 1},
+                {-2, 0, 2},
+                {-1, 0, 1}
+        };
+ 
+int[][] sy = new int[][]{
+                {-1, -2, -1},
+                {0, 0, 0},
+                {1, 2, 1}
+        };
+```
 
 siehe -> https://www.youtube.com/watch?v=uihBwtPIBxM
 
@@ -57,6 +100,11 @@ Sind `gx` und `gy` berechnet geht es weiter:
 
 `g` ist dann der neue Graustufenwert des Pixels.
 
+Das Ergebnisarray ist 2 Zeilen sowie 2 Spalten kleiner, da die Ränder nicht berechnet werden!
+
 Validiere mit:
 - `givenPixelArray_whenSoebel_returnSoebelFilteredArray`
 - `givenNullArray_whenSoebel_throwsException`
+
+## 7) custom filter
+Implementiere die Methode `public int[][] custom(int[][] pixels, int[][] filter)`. Im UI kann ein eigene Filter erstellt werden, der dann - wie beim Gaußschen-Filter - angewendet wird. Wichtig hier: Jetzt mal ohne Tests.

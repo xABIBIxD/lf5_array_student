@@ -126,12 +126,77 @@ public class ImageProcessor {
     }
 
     public int[][] threshold(int[][] pixels, int thresholdValue) {
+        if (pixels == null || thresholdValue < 0 || thresholdValue > 255) {
+            throw new IllegalArgumentException();
+        }
         int[][] result = new int[pixels.length][pixels[0].length];
         for (int y = 0; y < pixels.length; y++) {
             for (int x = 0; x < pixels[0].length; x++) {
                 result[y][x] = pixels[y][x] < thresholdValue ? 0 : pixels[y][x];
             }
         }
+        return result;
+    }
+
+    public int[][] gaussianBlur(int[][] pixels) {
+        if (pixels == null) {
+            throw new IllegalArgumentException();
+        }
+        int[][] filter = new int[][]{
+                {1, 2, 1},
+                {2, 4, 2},
+                {1, 2, 1}
+        };
+        int[][] result = new int[pixels.length - 2][pixels[0].length - 2];
+        for (int y = 1; y < pixels.length - 1; y++) {
+            for (int x = 1; x < pixels[y].length - 1; x++) {
+                int blurredPixel = 0;
+                for (int yd = -1; yd <= 1; yd++) {
+                    for (int xd = -1; xd <= 1; xd++) {
+                        blurredPixel += pixels[y + yd][x + xd] * filter[yd + 1][xd + 1];
+                    }
+                }
+                result[y - 1][x - 1] = (int) (blurredPixel / 16);
+            }
+        }
+        int[][] res = new int[pixels.length][pixels[0].length];
+        for (int y = 0; y < pixels.length; y++) {
+            for (int x = 0; x < pixels[y].length; x++) {
+                if (y == 0 || y == pixels.length - 1 || x == 0 || x == pixels[0].length - 1) {
+                    res[y][x] = pixels[y][x];
+                } else {
+                    res[y][x] = result[y - 1][x - 1];
+                }
+            }
+        }
+        return res;
+    }
+
+    public int[][] custom(int[][] pixels, int[][] filter) {
+
+        int sum = 0;
+        for (int[] row : filter) {
+            for (int i : row) {
+                sum += i;
+            }
+        }
+        if (sum == 0) {
+            sum = 1;
+        }
+        System.out.println(sum);
+        int[][] result = new int[pixels.length - 2][pixels[0].length - 2];
+        for (int y = 1; y < pixels.length - 1; y++) {
+            for (int x = 1; x < pixels[y].length - 1; x++) {
+                int sumPixel = 0;
+                for (int yd = -1; yd <= 1; yd++) {
+                    for (int xd = -1; xd <= 1; xd++) {
+                        sumPixel += pixels[y + yd][x + xd] * filter[yd + 1][xd + 1];
+                    }
+                }
+                result[y - 1][x - 1] = Math.abs(sumPixel / sum);
+            }
+        }
+
         return result;
     }
 
