@@ -62,46 +62,38 @@ for-Schleifen. Das unten abgebildete Codefragment bewirkt die Initialisierung ei
 mit den Werten von 0 bis 27, das darunter abgebildete Codesnippet gibt die Matrix auf dem Bildschirm aus:
 
 ```
-value=0;
+int[][] matrix=new int[3][4];
+int value=1;
 for (int row=0; row<3; row++){
-     for(int column=0, column<4; column++){
+     for(int column=0; column<4; column++){
           matrix[row][column]=value;
           value++;
      }
 }
 
 for (int row=0; row<matrix.length; row++){
-     for(int column=0, column<matrix[row].length; column++){
-          System.out.print(matrix[row][column]);
+     for(int column=0; column<matrix[row].length; column++){
+          System.out.print(matrix[row][column] + "|");
      }
-     System.out.print();
+     System.out.println();
 }
 ```
-Die Ausgabe würde wie folgt aussehen:
+Die Ausgabe würde in etwa wie folgt aussehen:
 <table>
+
   <tr>
-    <td> </td>
-    <td>0</td>
-    <td>1</td>
-    <td>2</td>
-    <td>3</td>
-  </tr>
-  <tr>
-    <td>0</td>
     <td>1</td>
     <td>2</td>
     <td>3</td>
     <td>4</td>
   </tr>
   <tr>
-    <td>1</td>
     <td>5</td>
     <td>6</td>
     <td>7</td>
     <td>8</td>
   </tr>
   <tr>
-    <td>2</td>
     <td>9</td>
     <td>10</td>
     <td>11</td>

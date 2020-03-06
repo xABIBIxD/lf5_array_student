@@ -42,6 +42,9 @@ public class ImageProcessor {
     }
 
     public int[][] soebel(int[][] pixels) {
+        if (pixels == null) {
+            throw new IllegalArgumentException();
+        }
         int[][] sx = new int[][]{
                 {-1, 0, 1},
                 {-2, 0, 2},
@@ -58,8 +61,8 @@ public class ImageProcessor {
             for (int x = 1; x < pixels[y].length - 1; x++) {
                 int gx = 0;
                 int gy = 0;
-                for (int yd = -1; yd < 1; yd++) {
-                    for (int xd = -1; xd < 1; xd++) {
+                for (int yd = -1; yd <= 1; yd++) {
+                    for (int xd = -1; xd <= 1; xd++) {
                         gx += pixels[y + yd][x + xd] * sx[yd + 1][xd + 1];
                         gy += pixels[y + yd][x + xd] * sy[yd + 1][xd + 1];
                     }
@@ -81,11 +84,52 @@ public class ImageProcessor {
             }
         }
         int[][] result = new int[pixels.length][pixels[0].length];
-
-        double factor = max / 255.0;
+        System.out.println("max: " + max);
+        double factor = 255.0 / max;
+        System.out.println(factor);
         for (int y = 1; y < pixels.length - 1; y++) {
             for (int x = 1; x < pixels[y].length; x++) {
                 result[y][x] = (int) (pixels[y][x] * factor);
+            }
+        }
+        return result;
+    }
+
+    public BufferedImage convertGrayscaleArrayToImage(int[][] pixels) {
+        int height = pixels.length;
+        int width = pixels[0].length;
+        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int v = pixels[y][x];
+                int value = v << 16 | v << 8 | v;
+                img.setRGB(x, y, value);
+            }
+        }
+        return img;
+    }
+
+    public void print(int[][] pixels) {
+        System.out.println();
+        System.out.println("int[][] data = {");
+        for (int[] row : pixels) {
+            String r = "{";
+            for (int i : row) {
+                r += String.format("%d,", i);
+            }
+            r = r.substring(0, r.length() - 1);
+            System.out.println(r + "},");
+        }
+        System.out.println("};");
+
+    }
+
+    public int[][] threshold(int[][] pixels, int thresholdValue) {
+        int[][] result = new int[pixels.length][pixels[0].length];
+        for (int y = 0; y < pixels.length; y++) {
+            for (int x = 0; x < pixels[0].length; x++) {
+                result[y][x] = pixels[y][x] < thresholdValue ? 0 : pixels[y][x];
             }
         }
         return result;

@@ -29,7 +29,7 @@ Implementiere die Methode `getGrayscaleValueFromPixel(BufferedImage img, int y, 
   
 - Das Ergebnis soll ja ein Graustufenbild sein. Der Graustufenwert eines Pixels wäre also der Durchnitt von Rot, Grün und Blau.
   
-## 3) 
+## 3) Convert
 Implementiere die Methode `convertImageToGraycaleArray(Buffered Image)`. Validiere mit:
 - `givenImage_whenConvertImageToGraycaleArray_returnGrayscaleArray`
 - `givenNullImage_whenConvertImageToGraycaleArray_throwsException`
@@ -37,7 +37,11 @@ Implementiere die Methode `convertImageToGraycaleArray(Buffered Image)`. Validie
 ####Tipp:
 - Höhe und Breite eins Bildes: `img.getHeight() img.getWidth()`
  
-## 4)
+ 
+## 4) Threshold 
+Implementiere die Methode `threshold(int[][] pixels, int thresholdValue)`. Jeder Pixel der einen Grauwert unterhalb des `thresholdValue` hat wird auf 0 gesetzt.  
+ 
+## 5) Soebel
 Jetzt kommt eine Kantendetektion mittels des Soebel-Algorithmus. Der Algorithmus nutzt eine Faltung mittels einer 3×3-Matrix (Faltungsmatrix), die aus dem Originalbild ein Gradienten-Bild erzeugt. Mit diesem werden hohe Frequenzen im Bild mit Grauwerten dargestellt. Die Bereiche der größten Intensität sind dort, wo sich die Helligkeit des Originalbildes am stärksten ändert und somit die größten Kanten darstellt. Daher wird zumeist nach der Faltung mit dem Sobeloperator eine Schwellwert-Funktion angewandt. Der Algorithmus kann allerdings auch auf andere zweidimensionale Signale angewandt werden.
 
 Aus dem Originalbild wird für jeden Bildpunkt immer nur ein Ausschnitt, genauer gesagt die Umgebung des zu betrachtenden Punktes, verwendet. Nun werden mittels der Sobeloperatoren `sx` und `sy` die "gefalteten" Resultate `gx` und `gy` berechnet.
@@ -52,3 +56,7 @@ Sind `gx` und `gy` berechnet geht es weiter:
 ![soebel](../../images/soebel.png)
 
 `g` ist dann der neue Graustufenwert des Pixels.
+
+Validiere mit:
+- `givenPixelArray_whenSoebel_returnSoebelFilteredArray`
+- `givenNullArray_whenSoebel_throwsException`
