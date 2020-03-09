@@ -1,4 +1,8 @@
-# ImageProcessor
+# ImageProcessor ******
+
+Ale Aufgaben können neben den Tests auch mittels der Klasse ImageProcessorUI getestet werden. Hier eine kleine Vorschau:
+
+![preview](../../images/imageProcessing/preview.png) 
 
 ## 1)
 Implementiere die Methode `loadImage`. Valdiere mit:
@@ -18,7 +22,7 @@ Implementiere die Methode `getGrayscaleValueFromPixel(BufferedImage img, int y, 
 - Farbwerte eines Pixels : `img.getRGB(x, y)` --> liefert eine 32 Bit umfassende binäre Darstellung der Farbwerte als `int` z.B.: `11111111000011000000111000001001`. 
     - Jeweils 8 Bit in folgender Reihenfolge: alpha, rot, gelb, blau. 
 - Um an die jeweiligen Bits zu kommen, benötigen wir Bit-Operatoren:
-  ![Bitvise](../../images/BitOperators.png)
+  ![Bitvise](../../images/imageProcessing/BitOperators.png)
   
   
 - Blau-Wert: Wir brauchen nur die 8 Bits ganz rechts. Also  nutzen wir das und mit `11111111` dargestellt in Hexadezimal: `img.getRGB(x, y) & 0xFF` 
@@ -29,7 +33,7 @@ Implementiere die Methode `getGrayscaleValueFromPixel(BufferedImage img, int y, 
   
 - Das Ergebnis soll ja ein Graustufenbild sein. Der Graustufenwert eines Pixels wäre also der Durchnitt von Rot, Grün und Blau.
   
-## 3) Convert
+## 3) convert to array
 Implementiere die Methode `convertImageToGraycaleArray(Buffered Image)`. Validiere mit:
 - `givenImage_whenConvertImageToGraycaleArray_returnGrayscaleArray`
 - `givenNullImage_whenConvertImageToGraycaleArray_throwsException`
@@ -37,15 +41,27 @@ Implementiere die Methode `convertImageToGraycaleArray(Buffered Image)`. Validie
 ####Tipp:
 - Höhe und Breite eins Bildes: `img.getHeight() img.getWidth()`
  
- 
-## 4) Threshold 
+## 4) convert to image
+Implementiere die Methode `convertGrayscaleArrayToImage`. Hier muss für jeden Pixel der Grau-Wert wieder zu eine RGB-Wert umgewandelt werden. Angenommen der Grauwert hat das Bitmuster `10001101`, dann müsste folgender RGB-Wert gesetzt werden: `100011011000110110001101`, also einfach für alle drei Farbkanäle mit dem gleichen Grauwert. Dies kann recht einfach mittels Bitshifting und dem Oder-Operator erreicht werden. 
+
+Hier ein Beispiel: 
+- `pixel` : `10001101`
+- `pixel << 8` : `0000000010001101`
+- `pixel << 16` --> `000000000000000010001101`
+
+Wenn man diese drei Ergebnisse mit dem Bit-Oder-Operator verbindet, erhält man das gewünschte Ergebnis, welches mit `setRGB(x, y, pixelValue)` in ein BufferedImage gesetzt werden kann. Das BufferedImage sollte wie folgt erzeugt werden: `new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY)`. Validiere mit:
+
+- `givenNull_whenConvertGrayscaleArrayToImage_throwException`
+- `givenGrayscalePixels_whenConvertGrayscaleArrayToImage_returnImage`
+
+## 5) Threshold 
 Implementiere die Methode `threshold(int[][] pixels, int thresholdValue)`. Jeder Pixel der einen Grauwert unterhalb des `thresholdValue` hat wird auf 0 gesetzt.  
 
 Validiere mit:
 - `givenInvalidParams_whenThreshold_ThrowsException`
 - `givenArray_whenThreshold_returnThresholdedArray`
 
-## 5) Gaussian Blur 
+## 6) Gaussian Blur 
 Der Filter wird benutzt, um z.B. Kanten zu glätten, wobei auch die Werte 
 der umliegenden Punkte mit berücksichtigt werden. Doch was
  ist genau ein Filter? Im Grund genommen ist ein Filter auch wieder 
@@ -72,7 +88,7 @@ Validiere mit:
 - `givenNull_whenGaussianBlur_throwsException`
 - `givenPixelArray_whenGaussianBlur_returnBlurredArray`
 
-## 6) Soebel
+## 7) Soebel
 Jetzt kommt eine Kantendetektion mittels des Soebel-Algorithmus. Der Algorithmus nutzt eine Faltung mittels einer 3×3-Matrix (Faltungsmatrix), die aus dem Originalbild ein Gradienten-Bild erzeugt. Mit diesem werden hohe Frequenzen im Bild mit Grauwerten dargestellt. Die Bereiche der größten Intensität sind dort, wo sich die Helligkeit des Originalbildes am stärksten ändert und somit die größten Kanten darstellt. Daher wird zumeist nach der Faltung mit dem Sobeloperator eine Schwellwert-Funktion angewandt. Der Algorithmus kann allerdings auch auf andere zweidimensionale Signale angewandt werden.
 
 Aus dem Originalbild wird für jeden Bildpunkt immer nur ein Ausschnitt, genauer gesagt die Umgebung des zu betrachtenden Punktes, verwendet. Nun werden mittels der Sobeloperatoren `sx` und `sy` die "gefalteten" Resultate `gx` und `gy` berechnet.
@@ -96,7 +112,7 @@ siehe -> https://www.youtube.com/watch?v=uihBwtPIBxM
 
 Sind `gx` und `gy` berechnet geht es weiter: 
 
-![soebel](../../images/soebel.png)
+![soebel](../../images/imageProcessing/soebel.png)
 
 `g` ist dann der neue Graustufenwert des Pixels.
 
@@ -106,5 +122,5 @@ Validiere mit:
 - `givenPixelArray_whenSoebel_returnSoebelFilteredArray`
 - `givenNullArray_whenSoebel_throwsException`
 
-## 7) custom filter
+## 8) custom filter
 Implementiere die Methode `public int[][] custom(int[][] pixels, int[][] filter)`. Im UI kann ein eigene Filter erstellt werden, der dann - wie beim Gaußschen-Filter - angewendet wird. Wichtig hier: Jetzt mal ohne Tests.

@@ -46,7 +46,12 @@ public class ImageProcessorUI extends JFrame {
             }
         });
         this.addButton("reset", (e) -> this.resetPictureAndPixels());
-        this.addButton("grayscale", (e) -> this.paintProcessedArray(this.pixels));
+        this.addButton("grayscale", (e) -> {
+            if (this.pixels == null) {
+                JOptionPane.showMessageDialog(this, "noch nicht implementiert!");
+            }
+            this.paintProcessedArray(this.pixels);
+        });
 
         {
             this.slider = new JSlider();
@@ -62,17 +67,33 @@ public class ImageProcessorUI extends JFrame {
         }
         this.addButton("threshold", (e) -> {
             this.repaintCurrentAsOriginal();
-            this.pixels = this.imageProcessor.threshold(this.pixels, slider.getValue());
-            this.paintProcessedArray(this.pixels);
+            try {
+                this.pixels = this.imageProcessor.threshold(this.pixels, slider.getValue());
+                if (this.pixels == null) {
+                    JOptionPane.showMessageDialog(this, "Aufgabe 5!");
+                } else {
+                    this.paintProcessedArray(this.pixels);
+                }
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, "noch nicht implementiert!");
+            }
         });
         this.addButton("blur", (e) -> {
             this.repaintCurrentAsOriginal();
-            this.pixels = this.imageProcessor.gaussianBlur(this.pixels);
-            this.paintProcessedArray(pixels);
+            try {
+                this.pixels = this.imageProcessor.gaussianBlur(this.pixels);
+                this.paintProcessedArray(pixels);
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, "noch nicht implementiert! Erledigen Sie Aufgabe 6!");
+            }
         });
         this.addButton("soebel", (e) -> {
             this.repaintCurrentAsOriginal();
-            this.pixels = this.imageProcessor.soebel(this.pixels);
+            try {
+                this.pixels = this.imageProcessor.soebel(this.pixels);
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, "kommt mit Aufgabe 7");
+            }
             this.paintProcessedArray(pixels);
         });
         getNextX();
@@ -100,8 +121,12 @@ public class ImageProcessorUI extends JFrame {
                 }
             }
             this.repaintCurrentAsOriginal();
-            this.pixels = this.imageProcessor.custom(this.pixels, filter);
-            this.paintProcessedArray(pixels);
+            try {
+                this.pixels = this.imageProcessor.custom(this.pixels, filter);
+                this.paintProcessedArray(pixels);
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, "Aufgabe 8!");
+            }
         });
 
 
@@ -112,20 +137,39 @@ public class ImageProcessorUI extends JFrame {
     }
 
     private void repaintCurrentAsOriginal() {
-        BufferedImage newOriginal = this.imageProcessor.convertGrayscaleArrayToImage(this.pixels);
-        imgOrigLabel.setIcon(new ImageIcon(newOriginal.getScaledInstance(800, 800, 0)));
+        try {
+            BufferedImage newOriginal = this.imageProcessor.convertGrayscaleArrayToImage(this.pixels);
+            imgOrigLabel.setIcon(new ImageIcon(newOriginal.getScaledInstance(800, 800, 0)));
+        } catch (IllegalArgumentException e) {
+
+        }
     }
 
     private void paintProcessedArray(int[][] pixels) {
-        BufferedImage img = this.imageProcessor.convertGrayscaleArrayToImage(pixels);
-        imgLabel.setIcon(new ImageIcon(img.getScaledInstance(800, 800, 0)));
-        repaint();
+        try {
+            BufferedImage img = this.imageProcessor.convertGrayscaleArrayToImage(pixels);
+            if (img == null) {
+                JOptionPane.showMessageDialog(this, "Ab Aufgabe 4 sollte rechts das Bild als Graustufenbild dargestellt werden!");
+            } else {
+                imgLabel.setIcon(new ImageIcon(img.getScaledInstance(800, 800, 0)));
+            }
+            repaint();
+        } catch (IllegalArgumentException e) {
+
+        }
     }
 
     private void resetPictureAndPixels() {
-        imgOrigLabel.setIcon(new ImageIcon(original.getScaledInstance(800, 800, 0)));
-        this.pixels = this.imageProcessor.convertImageToGraycaleArray(original);
-        imgLabel.setIcon(null);
+        if (original != null) {
+            imgOrigLabel.setIcon(new ImageIcon(original.getScaledInstance(800, 800, 0)));
+            this.pixels = this.imageProcessor.convertImageToGraycaleArray(original);
+            if (this.pixels == null) {
+                JOptionPane.showMessageDialog(this, "Es gibt noch kein Graustufen-Array der Pixel. Erledigen Sie Aufgabe 1-3!");
+            }
+            imgLabel.setIcon(null);
+        } else {
+            JOptionPane.showMessageDialog(this, "Hier sollte ein Bild erscheinen. Erledigen Sie Aufgabe 1!");
+        }
     }
 
     private void addButton(String label, ActionListener action) {

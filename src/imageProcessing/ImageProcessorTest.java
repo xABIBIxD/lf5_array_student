@@ -24,7 +24,7 @@ public class ImageProcessorTest {
 
     @Test
     void givenAValidFilePath_whenLoadImage_returnBufferedImage() {
-        assertEquals(962, this.imageProcessor.loadImage("./images/BitOperators.png").getWidth());
+        assertEquals(962, this.imageProcessor.loadImage("images/imageProcessing/BitOperators.png").getWidth());
     }
 
     @Test
@@ -67,6 +67,25 @@ public class ImageProcessorTest {
         assertEquals(blackGray, this.imageProcessor.getGrayscaleValueFromPixel(sampleImg, 1, 0));
         assertEquals(orangeGray, this.imageProcessor.getGrayscaleValueFromPixel(sampleImg, 1, 1));
 
+
+    }
+
+    @Test
+    void givenImage_whenConvertImageToGraycaleArray_returnGrayscaleArray() {
+        BufferedImage sampleImg = new BufferedImage(2, 2, BufferedImage.TYPE_INT_ARGB);
+        sampleImg.setRGB(0, 0, Color.yellow.getRGB());
+        sampleImg.setRGB(1, 0, Color.magenta.getRGB());
+        sampleImg.setRGB(0, 1, Color.black.getRGB());
+        sampleImg.setRGB(1, 1, Color.orange.getRGB());
+        int yellowGray = (Color.yellow.getRed() + Color.yellow.getBlue() + Color.yellow.getGreen()) / 3;
+        int magentaGray = (Color.magenta.getRed() + Color.magenta.getBlue() + Color.magenta.getGreen()) / 3;
+        int blackGray = (Color.black.getRed() + Color.black.getBlue() + Color.black.getGreen()) / 3;
+        int orangeGray = (Color.orange.getRed() + Color.orange.getBlue() + Color.orange.getGreen()) / 3;
+        assertArrayEquals(new int[][]{
+                {yellowGray, magentaGray},
+                {blackGray, orangeGray}
+        }, this.imageProcessor.convertImageToGraycaleArray(sampleImg));
+
         int[][] data = {
                 {0, 9, 135, 213, 93, 128, 233, 190, 40, 118, 138, 135, 144, 149, 153, 145, 141, 144, 145, 149, 139, 141, 144, 148, 146, 142, 145, 152, 145, 139, 133, 136, 130, 34, 187, 232, 163, 100, 210, 114, 0, 4, 0},
                 {2, 0, 0, 38, 196, 115, 93, 251, 134, 23, 59, 63, 78, 95, 65, 107, 103, 114, 76, 92, 113, 113, 108, 70, 115, 108, 117, 63, 81, 65, 57, 56, 29, 79, 254, 135, 141, 190, 26, 0, 0, 0, 46},
@@ -91,23 +110,6 @@ public class ImageProcessorTest {
         };
 
         assertArrayEquals(data, imageProcessor.convertImageToGraycaleArray(imageProcessor.loadImage("./images/imageProcessing/mini.jpg")));
-    }
-
-    @Test
-    void givenImage_whenConvertImageToGraycaleArray_returnGrayscaleArray() {
-        BufferedImage sampleImg = new BufferedImage(2, 2, BufferedImage.TYPE_INT_ARGB);
-        sampleImg.setRGB(0, 0, Color.yellow.getRGB());
-        sampleImg.setRGB(1, 0, Color.magenta.getRGB());
-        sampleImg.setRGB(0, 1, Color.black.getRGB());
-        sampleImg.setRGB(1, 1, Color.orange.getRGB());
-        int yellowGray = (Color.yellow.getRed() + Color.yellow.getBlue() + Color.yellow.getGreen()) / 3;
-        int magentaGray = (Color.magenta.getRed() + Color.magenta.getBlue() + Color.magenta.getGreen()) / 3;
-        int blackGray = (Color.black.getRed() + Color.black.getBlue() + Color.black.getGreen()) / 3;
-        int orangeGray = (Color.orange.getRed() + Color.orange.getBlue() + Color.orange.getGreen()) / 3;
-        assertArrayEquals(new int[][]{
-                {yellowGray, magentaGray},
-                {blackGray, orangeGray}
-        }, this.imageProcessor.convertImageToGraycaleArray(sampleImg));
     }
 
     @Test
@@ -193,7 +195,6 @@ public class ImageProcessorTest {
         );
     }
 
-
     @Test
     void givenPixelArray_whenGaussianBlur_returnBlurredArray() {
         int[][] data = {
@@ -227,6 +228,45 @@ public class ImageProcessorTest {
     @Test
     void givenNull_whenGaussianBlur_throwsException() {
         assertThrows(IllegalArgumentException.class, () -> this.imageProcessor.gaussianBlur(null));
+    }
+
+    @Test
+    void givenGrayscalePixels_whenConvertGrayscaleArrayToImage_returnImage() {
+        BufferedImage sampleImg = new BufferedImage(2, 2, BufferedImage.TYPE_INT_ARGB);
+        sampleImg.setRGB(0, 0, Color.yellow.getRGB());
+        sampleImg.setRGB(1, 0, Color.magenta.getRGB());
+        sampleImg.setRGB(0, 1, Color.black.getRGB());
+        sampleImg.setRGB(1, 1, Color.orange.getRGB());
+        int yellowGray = (Color.yellow.getRed() + Color.yellow.getBlue() + Color.yellow.getGreen()) / 3;
+        int magentaGray = (Color.magenta.getRed() + Color.magenta.getBlue() + Color.magenta.getGreen()) / 3;
+        int blackGray = (Color.black.getRed() + Color.black.getBlue() + Color.black.getGreen()) / 3;
+        int orangeGray = (Color.orange.getRed() + Color.orange.getBlue() + Color.orange.getGreen()) / 3;
+
+        int pixels[][] = new int[][]{
+                {yellowGray, magentaGray},
+                {blackGray, orangeGray}
+        };
+
+        BufferedImage img = this.imageProcessor.convertGrayscaleArrayToImage(pixels);
+        assertEquals(2, img.getWidth());
+        assertEquals(2, img.getHeight());
+
+        BufferedImage expected = new BufferedImage(2, 2, BufferedImage.TYPE_BYTE_GRAY);
+        expected.setRGB(0, 0, new Color(yellowGray << 16 | yellowGray << 8 | yellowGray).getRGB());
+        expected.setRGB(1, 0, new Color(magentaGray << 16 | magentaGray << 8 | magentaGray).getRGB());
+        expected.setRGB(0, 1, new Color(blackGray << 16 | blackGray << 8 | blackGray).getRGB());
+        expected.setRGB(1, 1, new Color(orangeGray << 16 | orangeGray << 8 | orangeGray).getRGB());
+
+        assertEquals(Integer.toBinaryString(expected.getRGB(0, 0)), Integer.toBinaryString(img.getRGB(0, 0)));
+        assertEquals(Integer.toBinaryString(expected.getRGB(1, 0)), Integer.toBinaryString(img.getRGB(1, 0)));
+        assertEquals(Integer.toBinaryString(expected.getRGB(0, 1)), Integer.toBinaryString(img.getRGB(0, 1)));
+        assertEquals(Integer.toBinaryString(expected.getRGB(1, 1)), Integer.toBinaryString(img.getRGB(1, 1)));
+
+    }
+
+    @Test
+    void givenNull_whenConvertGrayscaleArrayToImage_throwException() {
+        assertThrows(IllegalArgumentException.class, () -> this.imageProcessor.convertGrayscaleArrayToImage(null));
     }
 
 }
