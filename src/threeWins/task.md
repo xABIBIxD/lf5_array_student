@@ -36,7 +36,7 @@ Folgende Ereignisse sind möglich:
  
 Folgende Tests validieren die Aufgabe:
 - `givenValidParams_whenPlaceGamePiece_returnTrueAndMatchfieldCorrect`
-- `givenValidParams_whenPlaceGamePiece_returnFalse`
+- `givenValidParamsButChoosenColumnIsFull_whenPlaceGamePiece_returnFalse`
 - `givenInvalidPlayer_whenPlaceGamePiece_throwException`
 - `givenInvalidColumn_whenPlaceGamePiece_throwException`
 
