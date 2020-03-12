@@ -2,43 +2,41 @@ package gameOfLife;
 
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class GameOfLifeUI extends JFrame {
-
     private GameOfLife game;
     private JPanel gameField;
 
     public GameOfLifeUI() {
         game = new GameOfLife();
-        game.initializeBoard(30);
+        inputForInitialzingBoard();
         setVisible(true);
-        setSize(800, 850);
+        setTitle("Game of Life");
+        setSize(710, 788);
         setLayout(null);
         this.gameField = new JPanel();
         this.gameField.setLayout(new GridLayout(10, 10));
-        this.gameField.setBackground(Color.yellow);
-        this.gameField.setBounds(0, 50, 800, 800);
+        this.gameField.setBounds(0, 50, 700, 700);
         getContentPane().add(this.gameField);
+        Border border = LineBorder.createBlackLineBorder();
         JButton btn = new JButton("neue Generation");
-        btn.setBounds(0, 0, 800, 50);
+        btn.setBorder(border);
+        btn.setFont(new Font("Arial", Font.BOLD, 25));
+        btn.setBounds(0, 0, 700, 50);
         btn.addActionListener((e) -> {
             if (game.simulationOver()) {
                 JOptionPane.showMessageDialog(this, "Game over!");
+                System.exit(0);
             } else {
-                for (char[] row : this.game.getBoard()) {
-                    System.out.println(row);
-                }
-                System.out.println();
-                System.out.println();
-
-
                 game.simulate();
                 for (int y = 0; y < 10; y++) {
                     for (int x = 0; x < 10; x++) {
-                        ((JLabel) this.gameField.getComponent(y * 10 + x)).setText(game.getCellStatus(y, x) + "");
+                        ((JLabel) this.gameField.getComponent(y * 10 + x)).setText(game.getCellStatus(y+1, x+1) + "");
                     }
                 }
                 SwingUtilities.updateComponentTreeUI(this);
@@ -49,20 +47,32 @@ public class GameOfLifeUI extends JFrame {
         for (int y = 0; y < 10; y++) {
             for (int x = 0; x < 10; x++) {
                 GameFieldJLabel label = new GameFieldJLabel(y, x);
-                label.setText(game.getCellStatus(y, x) + "");
+                label.setText(game.getCellStatus(y+1, x+1) + "");
                 label.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         GameFieldJLabel clicked = (GameFieldJLabel) e.getSource();
-                        game.setAliveCell(clicked.getyPosi() + 1, clicked.getxPosi() + 1);
-                        System.out.println((clicked.getyPosi() + 1) + "  " + (clicked.getxPosi() + 1));
-                        clicked.setText("O");
+                        if(game.getCellStatus(clicked.getyPosi() + 1, clicked.getxPosi() + 1)!='-'){
+                            game.setAliveCell(clicked.getyPosi() + 1, clicked.getxPosi() + 1);
+                            clicked.setText("O");
+                        }
                     }
                 });
                 this.gameField.add(label);
             }
         }
         SwingUtilities.updateComponentTreeUI(this);
+    }
+
+    private void inputForInitialzingBoard(){
+        try{
+            String number = JOptionPane.showInputDialog("Gib die Anzahl der lebenden Zellen der ersten Generation an: ");
+            game.initializeBoard(Integer.parseInt(number));
+        }
+        catch(RuntimeException e){
+            JOptionPane.showConfirmDialog(this, e.getMessage(), "Falsche Eingabe", JOptionPane.OK_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE);
+            inputForInitialzingBoard();
+        }
     }
 
     public static void main(String[] args) {
@@ -87,14 +97,21 @@ class GameFieldJLabel extends JLabel {
         super();
         this.xPosi = xPosi;
         this.yPosi = yPosi;
-        setSize(80, 80);
+        setSize(50, 50);
+        Border border = LineBorder.createBlackLineBorder();
+        this.setBorder(border);
+        this.setVerticalAlignment(JLabel.CENTER);
+        this.setHorizontalAlignment(JLabel.CENTER);
+        this.setFont(new Font("Arial",Font.BOLD, 20));
         setOpaque(true);
     }
 
     public void setText(String text) {
         if (text.equals("O")) {
             setBackground(Color.green);
+            super.setText("O");
         } else {
+            super.setText(" ");
             setBackground(Color.WHITE);
         }
     }

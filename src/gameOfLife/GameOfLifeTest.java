@@ -10,14 +10,23 @@ import static org.junit.jupiter.api.Assertions.*;
 public class GameOfLifeTest {
 
 	private GameOfLife game;
-	
+
 	@BeforeEach
 	void setUp() {
 		game = new GameOfLife();
 	}
 
+	@ParameterizedTest(name = "number={0}")
+	@CsvSource(value = {"-20", "-1", "101", "200"})
+	void givenNumberOfCellsHigherThan100OrLowerThan0_WhenInitializeBoard_ThenThrowRuntimeException(int numberOfCells){
+		Exception exception = assertThrows(RuntimeException.class, () -> {game.initializeBoard(numberOfCells);
+		});
+		String expectedMessage = "Die Anzahl der Zellen muss im Intervall 1 bis 100 liegen!";
+		String actualMessage = exception.getMessage();
+		assertEquals(actualMessage, expectedMessage);
+	}
 	@Test
-	void givenNoBoard_WhenInitializeBoardWithSpaces_ThenReturnEmptyBoard() {
+	void givenStartGameOfLife_WhenInitializeBoardWithSpaces_ThenReturnEmptyBoard() {
 		game.initializeBoard(0);
 		char[][] board= getEmptyArray(10, 10);
 		assertArrayEquals(board, game.getBoard());
@@ -31,7 +40,7 @@ public class GameOfLifeTest {
 	}
 
 	@Test
-	public void givenBoardWith2AliveCells_WhenGetAliveCells_ThenReturn2(){
+	void givenBoardWith2AliveCells_WhenGetAliveCells_ThenReturn2(){
 		game.initializeBoard(0);
 		game.setAliveCell(1,1);
 		game.setAliveCell(1,2);
@@ -58,22 +67,22 @@ public class GameOfLifeTest {
 	}
 
 	@ParameterizedTest(name = "number={0}")
-	@CsvSource(value = {"1", "5", "10", "20", "30", "45", "50", "60"})
-	public void givenStartOfGame_WhenInitializedBoard_ThenReturnRightNumberOfAliveCells(int number){
+	@CsvSource(value = {"1", "5", "10", "20", "30", "45", "50", "60", "70"})
+	void givenStartOfGame_WhenInitializedBoard_ThenReturnRightNumberOfAliveCells(int number){
 		game.initializeBoard(number);
 		assertEquals(number, game.getAliveCells());
 	}
-	
+
 	@Test
-	public void givenCellWithNoNeighbour_WhenSimulate_ThenCellIsDead(){
+	void givenCellWithNoNeighbour_WhenSimulate_ThenCellIsDead(){
 		game.initializeBoard(0);
 		game.setAliveCell(2,2);
 		game.simulate();
 		assertEquals(' ', game.getCellStatus(2,2));
 	}
-	
+
 	@Test
-	public void givenCellWithOneNeighbour_WhenSimulate_ThenCellIsDead(){
+	void givenCellWithOneNeighbour_WhenSimulate_ThenCellIsDead(){
 		game.initializeBoard(0);
 		game.setAliveCell(2,2);
 		game.setAliveCell(2, 3);
@@ -82,7 +91,7 @@ public class GameOfLifeTest {
 	}
 
 	@Test
-	public void givenCellWithFourNeighbours_WhenSimulate_ThenCellIsDead(){
+	void givenCellWithFourNeighbours_WhenSimulate_ThenCellIsDead(){
 		game.initializeBoard(0);
 		game.setAliveCell(2, 2);
 		game.setAliveCell(2, 3);
@@ -92,9 +101,9 @@ public class GameOfLifeTest {
 		game.simulate();
 		assertEquals(' ', game.getCellStatus(2,2));
 	}
-	
+
 	@Test
-	public void givenCellWithThreeNeighbours_WhenSimulate_ThenCellIsAlive(){
+	void givenCellWithThreeNeighbours_WhenSimulate_ThenCellIsAlive(){
 		game.initializeBoard(0);
 		game.setAliveCell(2, 3);
 		game.setAliveCell(3, 3);
@@ -102,9 +111,9 @@ public class GameOfLifeTest {
 		game.simulate();
 		assertEquals('O', game.getCellStatus(2,2));
 	}
-	
+
 	@Test
-	public void givenAPopulation_WhenSimulate_ThenReturnTruePopulation(){
+	void givenAPopulation_WhenSimulate_ThenReturnTruePopulation(){
 		game.initializeBoard(0);
 		game.setAliveCell(1, 1);
 		game.setAliveCell(1, 2);
@@ -116,9 +125,9 @@ public class GameOfLifeTest {
 		game.setAliveCell(7, 5);
 		game.setAliveCell(7, 6);
 		game.setAliveCell(8, 5);
-		
+
 		game.simulate();
-				
+
 		char[][] secondGeneration = getEmptyArray(10, 10);
 
 		secondGeneration[0][0]= 'O';
@@ -133,19 +142,19 @@ public class GameOfLifeTest {
 		secondGeneration[7][3]= 'O';
 		secondGeneration[7][4]= 'O';
 		secondGeneration[7][5]= 'O';
-		
+
 		char[][] simulatedBoard = game.getBoard();
-		assertArrayEquals(simulatedBoard, secondGeneration);		
+		assertArrayEquals(simulatedBoard, secondGeneration);
 	}
-	
+
 	@Test
-	public void givenAllCellsAreDead_WhenSimulationOver_ThenReturnTrue(){
+	void givenAllCellsAreDead_WhenSimulationOver_ThenReturnTrue(){
 		game.initializeBoard(0);
 		assertTrue(game.simulationOver());
 	}
 
 	@Test
-	public void testSimulationOverSameBoard(){
+	void testSimulationOverSameBoard(){
 		game.initializeBoard(0);
 		game.setAliveCell(2, 2);
 		game.setAliveCell(2, 3);
@@ -155,7 +164,7 @@ public class GameOfLifeTest {
 		game.setAliveCell(4, 4);
 		game.setAliveCell(5, 3);
 		game.simulate();
-		assertTrue(game.simulationOver());		
+		assertTrue(game.simulationOver());
 	}
 
 	private char[][] getEmptyArray(int rowNumber, int colNumber) {
