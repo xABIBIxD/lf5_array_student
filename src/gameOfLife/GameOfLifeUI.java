@@ -33,8 +33,7 @@ public class GameOfLifeUI extends JFrame {
                 }
                 System.out.println();
                 System.out.println();
-
-
+                
                 game.simulate();
                 for (int y = 0; y < 10; y++) {
                     for (int x = 0; x < 10; x++) {
