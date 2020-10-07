@@ -1,5 +1,5 @@
 # Candy Crush! *****
-
+![](../../images/candyCrush/CandyTop.png)
 ##Spielprinzip 
 Candy Crush Saga (oder kurz: Candy Crush) ist ein Puzzle-Computerspiel. Es ist online spielbar und als App erhältlich. Jedes Level besteht aus einem Spielbrett, das mit verschiedenfarbigen Süßigkeiten und Hindernissen gefüllt ist. Die Süßigkeiten beinhalten das „rote Geleebonbon“, das „orange Lutschbonbon“, den „gelben Zitronen-Drop“, das „grüne Kaubonbon“, das „blaue Lollipop-Stück“ und die „lilafarbene Traube“. Der Spieler kann Süßigkeitenpaare durch horizontales oder vertikales Bewegen einsammeln. 
 
