@@ -3,6 +3,7 @@ package volumeFilter;
 public class VolumeFilter {
 
     public int[] smoothValues(int[] values) {
-        return null;
+        int [] geglaetteteZahlen = new int[values.length];
+return null;
     }
 }
