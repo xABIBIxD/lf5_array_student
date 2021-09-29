@@ -62,7 +62,6 @@ public class ArrayCalculator {
         }
         int[] groessteZahlen = new int[array.length];
         for (int i = 0;i<=1;i++){
-            Math.max(int a,int b)
             }
         return groessteZahlen;
         }
