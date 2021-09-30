@@ -73,4 +73,4 @@ public class ArrayCalculator {
         return groessteZahlen;
         }
     }
-
+//Tolga = Ronaldo und Messi aka Ronaldiniho
