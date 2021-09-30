@@ -1,6 +1,9 @@
 package arrayCalculator;
 
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 public class ArrayCalculator {
     public int[] duplicateArrayValues(int[] array) {
         if (array==null){
@@ -60,9 +63,13 @@ public class ArrayCalculator {
         if (array==null){
             return null;
         }
-        int[] groessteZahlen = new int[array.length];
-        for (int i = 0;i<=1;i++){
-            }
+        if (array.length<=1){
+            throw new IllegalArgumentException();
+        }
+        int[] groessteZahlen = new int[2];
+            Arrays.sort(array);
+            groessteZahlen[0] = array[array.length-1];
+            groessteZahlen[1] = array[array.length-2];
         return groessteZahlen;
         }
     }
